@@ -1,0 +1,27 @@
+* {
+	font-family: monospace, monospace;
+	margin: 0px;
+	padding: 0px;
+}
+html, body {
+	width: 100%;
+	height: 100%;
+}
+progress {
+	border: none;
+	padding: 0;
+	width: 100%;
+	background: none;
+}
+progress::-webkit-progress-value {
+	background: green;
+}
+progress::-moz-progress-bar {
+	background: green;
+}
+progress::-webkit-progress-bar {
+	background: green;
+}
+.container {
+	width: 100%;
+}
