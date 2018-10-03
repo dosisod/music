@@ -6,26 +6,25 @@
 
 </head>
 <body>
-<!-- <audio src="" controls></audio> -->
 
-<progress value="0" max="1" id="time"></progress>
+<div class="container">
+	<p class="name" id="name">BLAH</p>
+	<!-- <input class="search" placeholder="Search Songs" /> -->
+	<div id="songs" onclick="song(event)">
 
-<audio id="music" src="car.mp3"></audio>
-<div>
-	<button onclick="play()">Play</button>
-	<button onclick="pause()">Pause</button>
-</div>
-
-<div id="songs" onclick="song(event)">
 <?php
-
 foreach (glob("./*.mp3", GLOB_MARK) as $item) {
-	//echo "<a href=".$item.">".basename($item)."</a></br>";
-	echo "<span>".basename($item)."</span></br>";
+	echo "<p class='song'>".basename($item)."</p>";
 }
-//die();
 ?>
+	</div>
+	<progress value="0" max="1" id="time"></progress>
+	<audio id="music" src=""></audio>
+	<div class="buttonbar">
+		<img class="control" src="last.png" onclick="next(-1)">
+		<img id="toggle" class="control" src="play.png" onclick="toggle()">
+		<img class="control" src="next.png" onclick="next(1)">
+	</div>
 </div>
-
 </body>
 </html>
