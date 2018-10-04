@@ -47,5 +47,11 @@ function load(s) {
 function song(e) {
 	if (e.target.tagName.toLowerCase() == "p") {
 		load(e.target.innerHTML)
+		for (i=0; i<songs.length; i++) {
+			if (songs[i]==e.target.innerHTML) {
+				current=i
+				break
+			}
+		}
 	}
 }
