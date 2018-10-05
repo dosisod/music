@@ -36,7 +36,7 @@ function next(n) {
 	load(songs[current])
 }
 function load(s) {
-	music.src=s
+	music.src="/music/"+s
 	music.onloadedmetadata=function() {
 		time.max=music.duration
 		play()
