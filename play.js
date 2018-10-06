@@ -1,6 +1,10 @@
 window.onload=function() {
 	time=document.getElementById("time")
 	music=document.getElementById("music")
+	cycle=document.getElementById("cycle")
+	state=0
+	states=["normal.png", "loop.png", "shuffle.png"]
+
 	setInterval(bar, 60/1000) //updates progress bar
 	played=false //loads first song on first load
 	current=0
@@ -24,19 +28,35 @@ function pause() {
 	music.pause()
 	document.getElementById("toggle").src="play.png"
 }
-function toggle() { //switches which icon is to be displayed
+function toggle() { //switches which icon is to be displayed for play/pause
 	if (!played) { load(songs[0]) }
 	if (music.paused) { play() }
 	else { pause() }
 }
 function next(n) { //shifts current index by N, can be any integer
-	if (n<0) {
-		n=songs.length+n
+	if (state==1) { //if loop mode is on
+		load(songs[current])
 	}
-	current=(current+n)%songs.length
-	load(songs[current])
+	else if (state==2) { //if shuffle is on
+		tmp=current
+		while (tmp==current) { //dont want to play the same song
+			current=(current+Math.floor(Math.random()*Math.floor(songs.length-1)))%songs.length
+		}
+		load(songs[current])
+	}
+	else { //normal mode
+		if (n<0) {
+			n=songs.length+n
+		}
+		current=(current+n)%songs.length
+		load(songs[current])
+	}
 }
-function load(s) {
+function mode() { //changes between play modes
+	state=(state+1)%states.length
+	cycle.src=states[state]
+}
+function load(s) { //loads a song and resets title, bar etc
 	music.src="/music/"+s
 	music.onloadedmetadata=function() {
 		time.max=music.duration
@@ -45,7 +65,7 @@ function load(s) {
 		document.getElementById("name").innerHTML=s
 	}
 }
-function song(e) {
+function song(e) { //handles when song container is clicked
 	if (e.target.tagName.toLowerCase() == "p") { //dont load song if div is clicked
 		load(e.target.innerHTML)
 		for (i=0; i<songs.length; i++) {

@@ -22,8 +22,9 @@ foreach (glob("./music/*.mp3", GLOB_MARK) as $item) {
 	<audio id="music" src=""></audio>
 	<div class="buttonbar">
 		<img class="control" src="last.png" onclick="next(-1)">
-		<img id="toggle" class="control" src="play.png" onclick="toggle()">
+		<img class="control" src="play.png" onclick="toggle()" id="toggle">
 		<img class="control" src="next.png" onclick="next(1)">
+		<img class="control" src="normal.png" onclick="mode()" id="cycle">
 	</div>
 </div>
 </body>
