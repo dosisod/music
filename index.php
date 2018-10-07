@@ -8,8 +8,7 @@
 <body>
 
 <div class="container">
-	<p class="name" id="name">BLAH</p>
-	<!-- <input class="search" placeholder="Search Songs" /> -->
+	<p class="name" id="name"></p>
 	<div id="songs" onclick="song(event)">
 
 <?php
@@ -21,10 +20,10 @@ foreach (glob("./music/*.mp3", GLOB_MARK) as $item) {
 	<progress value="0" max="1" id="time"></progress>
 	<audio id="music" src=""></audio>
 	<div class="buttonbar">
-		<img class="control" src="last.png" onclick="next(-1)">
-		<img class="control" src="play.png" onclick="toggle()" id="toggle">
-		<img class="control" src="next.png" onclick="next(1)">
-		<img class="control" src="normal.png" onclick="mode()" id="cycle">
+		<img class="control" src="img/last.png" onclick="next(-1)">
+		<img class="control" src="img/play.png" onclick="toggle()" id="toggle">
+		<img class="control" src="img/next.png" onclick="next(1)">
+		<img class="control" src="img/normal.png" onclick="mode()" id="cycle">
 	</div>
 </div>
 </body>

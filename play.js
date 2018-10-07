@@ -3,7 +3,7 @@ window.onload=function() {
 	music=document.getElementById("music")
 	cycle=document.getElementById("cycle")
 	state=0
-	states=["normal.png", "loop.png", "shuffle.png"]
+	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
 
 	setInterval(bar, 60/1000) //updates progress bar
 	played=false //loads first song on first load
@@ -22,11 +22,11 @@ function bar() {
 function play() {
 	played=true
 	music.play()
-	document.getElementById("toggle").src="pause.png"
+	document.getElementById("toggle").src="img/pause.png"
 }
 function pause() {
 	music.pause()
-	document.getElementById("toggle").src="play.png"
+	document.getElementById("toggle").src="img/play.png"
 }
 function toggle() { //switches which icon is to be displayed for play/pause
 	if (!played) { load(songs[0]) }
