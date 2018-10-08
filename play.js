@@ -9,9 +9,9 @@ window.onload=function() {
 	played=false //loads first song on first load
 	current=0
 	songs=[]
-	tmp=document.getElementsByClassName("song") //loads all songs into array
-	for (i=0; i<tmp.length; i++) {
-		songs.push(tmp[i].innerHTML)
+	raw=document.getElementsByClassName("song") //loads all songs into array
+	for (i=0; i<raw.length; i++) {
+		songs.push(raw[i].innerHTML)
 	}
 	document.getElementById("name").innerHTML=songs[0]
 }
@@ -57,8 +57,14 @@ function mode() { //changes between play modes
 	cycle.src=states[state]
 }
 function load(s) { //loads a song and resets title, bar etc
+	for (i=0; i<raw.length; i++) {
+		if (raw[i].innerHTML==s) {
+			raw[i].scrollIntoView()
+			break
+		}
+	}
 	music.src="/music/"+s
-	music.onloadedmetadata=function() {
+	music.onloadedmetadata=function() { //must wait for audio to load before getting timestamps
 		time.max=music.duration
 		play()
 		document.title=s
