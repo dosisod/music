@@ -2,7 +2,7 @@ window.onload=function() {
 	time=document.getElementById("time")
 	music=document.getElementById("music")
 	cycle=document.getElementById("cycle")
-	state=0
+	state=2
 	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
 
 	setInterval(bar, 60/1000) //updates progress bar
