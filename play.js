@@ -6,18 +6,33 @@ window.onload=function() {
 	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
 
 	setInterval(bar, 60/1000) //updates progress bar
+
 	played=false //loads first song on first load
 	current=0
+	
 	songs=[]
 	raw=document.getElementsByClassName("song") //loads all songs into array
-	for (i=0; i<raw.length; i++) {
-		songs.push(raw[i].innerHTML)
-	}
+	for (i in raw) songs.push(raw[i].innerHTML)
+	
 	document.getElementById("name").innerHTML=songs[0]
+
+	document.onkeydown=(e)=>{
+		key=e.which||e.event
+
+		//same key layout at desktop youtube
+		if (key==75) toggle()
+		else if (key==74) next(-1)
+		else if (key==76) next(1)
+		else if (key==77) mode()
+
+		//for volume
+		else if (key==188) volume(-0.1)
+		else if (key==190) volume(0.1)
+	}
 }
 function bar() {
 	time.value=music.currentTime
-	if (music.currentTime==music.duration) { next(1) } //plays next song after its done
+	if (music.currentTime==music.duration) next(1) //plays next song after its done
 }
 function play() {
 	played=true
@@ -29,9 +44,9 @@ function pause() {
 	document.getElementById("toggle").src="img/play.png"
 }
 function toggle() { //switches which icon is to be displayed for play/pause
-	if (!played) { load(songs[0]) }
-	if (music.paused) { play() }
-	else { pause() }
+	if (!played) load(songs[0])
+	if (music.paused) play()
+	else pause()
 }
 function next(n) { //shifts current index by N, can be any integer
 	if (state==1) { //if loop mode is on
@@ -57,14 +72,14 @@ function mode() { //changes between play modes
 	cycle.src=states[state]
 }
 function load(s) { //loads a song and resets title, bar etc
-	for (i=0; i<raw.length; i++) {
+	for (i in raw) {
 		if (raw[i].innerHTML==s) {
 			raw[i].scrollIntoView()
 			break
 		}
 	}
 	music.src="/music/"+s
-	music.onloadedmetadata=function() { //must wait for audio to load before getting timestamps
+	music.onloadedmetadata=()=>{ //must wait for audio to load before getting timestamps
 		time.max=music.duration
 		play()
 		document.title=s
@@ -74,11 +89,14 @@ function load(s) { //loads a song and resets title, bar etc
 function song(e) { //handles when song container is clicked
 	if (e.target.tagName.toLowerCase() == "p") { //dont load song if div is clicked
 		load(e.target.innerHTML)
-		for (i=0; i<songs.length; i++) {
+		for (i in songs) {
 			if (songs[i]==e.target.innerHTML) {
 				current=i
 				break
 			}
 		}
 	}
+}
+function volume(delta) { //changes volume by n
+	music.volume+=delta
 }
