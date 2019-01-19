@@ -1,6 +1,10 @@
 # music
-Offline HTML music player
+Offline music player made in HTML
 
-PHP page loads list of songs form `music/` into a HTML page
+Create a folder called `music/` in the same directory as the index.php
+
+Load your music into the `music/` folder
+
+PHP page will now load your songs form `music/` to be played!
 
 ![screenshot](img/img.png)
