@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>MP3</title>
+<title>MP3 Player</title>
 <script src="play.js"></script>
 <link rel="stylesheet" href="styles.css">
 

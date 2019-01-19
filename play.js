@@ -44,14 +44,10 @@ function pause() {
 	document.getElementById("toggle").src="img/play.png"
 }
 function toggle() { //switches which icon is to be displayed for play/pause
-	if (!played) load(songs[0])
-	if (music.paused) play()
-	else pause()
+	(!played)?load(songs[0]):music.paused?play():pause()
 }
 function next(n) { //shifts current index by N, can be any integer
-	if (state==1) { //if loop mode is on
-		load(songs[current])
-	}
+	if (state==1) load(songs[current]) //if loop mode is on
 	else if (state==2) { //if shuffle is on
 		tmp=current
 		while (tmp==current) { //dont want to play the same song
@@ -60,9 +56,7 @@ function next(n) { //shifts current index by N, can be any integer
 		load(songs[current])
 	}
 	else { //normal mode
-		if (n<0) {
-			n=songs.length+n
-		}
+		if (n<0) n=songs.length+n
 		current=(current+n)%songs.length
 		load(songs[current])
 	}
@@ -78,16 +72,15 @@ function load(s) { //loads a song and resets title, bar etc
 			break
 		}
 	}
-	music.src="/music/"+s
 	music.onloadedmetadata=()=>{ //must wait for audio to load before getting timestamps
 		time.max=music.duration
+		document.title=document.getElementById("name").innerHTML=s
 		play()
-		document.title=s
-		document.getElementById("name").innerHTML=s
 	}
+	music.src="/music/"+s
 }
 function song(e) { //handles when song container is clicked
-	if (e.target.tagName.toLowerCase() == "p") { //dont load song if div is clicked
+	if (e.target.tagName.toLowerCase()=="p") { //dont load song if div is clicked
 		load(e.target.innerHTML)
 		for (i in songs) {
 			if (songs[i]==e.target.innerHTML) {
