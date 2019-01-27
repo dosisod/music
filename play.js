@@ -6,15 +6,15 @@ window.onload=function() {
 	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
 
 	setInterval(bar, 60/1000) //updates progress bar
-
-	played=false //loads first song on first load
-	current=0
 	
 	songs=[]
 	raw=document.getElementsByClassName("song") //loads all songs into array
-	for (i in raw) songs.push(raw[i].innerHTML)
-	
-	document.getElementById("name").innerHTML=songs[0]
+	for (i of raw) songs.push(i.innerHTML)
+
+	played=false //loads first song on first load
+	current=Math.floor(Math.random()*songs.length-1) //selects a random song to start with
+
+	document.getElementById("name").innerHTML=songs[current]
 
 	document.onkeydown=(e)=>{
 		key=e.which||e.event
@@ -44,28 +44,34 @@ function pause() {
 	document.getElementById("toggle").src="img/play.png"
 }
 function toggle() { //switches which icon is to be displayed for play/pause
-	(!played)?load(songs[0]):music.paused?play():pause()
+	if (played)
+		if (music.paused)
+			play()
+		else
+			pause()
+	else
+		load_index(current)
 }
 function next(n) { //shifts current index by N, can be any integer
-	if (state==1) load(songs[current]) //if loop mode is on
-	else if (state==2) { //if shuffle is on
+	if (state==2) { //if shuffle is on
 		tmp=current
-		while (tmp==current) { //dont want to play the same song
-			current=(current+Math.floor(Math.random()*Math.floor(songs.length-1)))%songs.length
-		}
-		load(songs[current])
+		while (tmp==current) //dont want to play the same song
+			current=(current+Math.floor(Math.random()*songs.length-1))%songs.length
 	}
-	else { //normal mode
+	else if (state==0) { //normal mode
 		if (n<0) n=songs.length+n
 		current=(current+n)%songs.length
-		load(songs[current])
 	}
+	load_index(current) //state 1 will just run the same song again
 }
 function mode() { //changes between play modes
 	state=(state+1)%states.length
 	cycle.src=states[state]
 }
-function load(s) { //loads a song and resets title, bar etc
+function load_index(n) {
+	load_name(songs[n])
+}
+function load_name(s) { //loads a song and resets title, bar etc
 	for (i in raw) {
 		if (raw[i].innerHTML==s) {
 			raw[i].scrollIntoView()
@@ -81,7 +87,7 @@ function load(s) { //loads a song and resets title, bar etc
 }
 function song(e) { //handles when song container is clicked
 	if (e.target.tagName.toLowerCase()=="p") { //dont load song if div is clicked
-		load(e.target.innerHTML)
+		load_name(e.target.innerHTML)
 		for (i in songs) {
 			if (songs[i]==e.target.innerHTML) {
 				current=i
@@ -91,5 +97,7 @@ function song(e) { //handles when song container is clicked
 	}
 }
 function volume(delta) { //changes volume by n
-	music.volume+=delta
+	//prevents warning
+	if (music.volume+delta<=1&&music.volume+delta>=0)
+		music.volume+=delta
 }
