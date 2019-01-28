@@ -12,7 +12,7 @@ window.onload=function() {
 	for (i of raw) songs.push(i.innerHTML)
 
 	played=false //loads first song on first load
-	current=Math.floor(Math.random()*songs.length-1) //selects a random song to start with
+	current=Math.floor(Math.random()*songs.length) //selects a random song to start with
 
 	document.getElementById("name").innerHTML=songs[current]
 
@@ -56,7 +56,7 @@ function next(n) { //shifts current index by N, can be any integer
 	if (state==2) { //if shuffle is on
 		tmp=current
 		while (tmp==current) //dont want to play the same song
-			current=(current+Math.floor(Math.random()*songs.length-1))%songs.length
+			current=(current+Math.floor(Math.random()*songs.length))%songs.length
 	}
 	else if (state==0) { //normal mode
 		if (n<0) n=songs.length+n
