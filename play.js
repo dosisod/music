@@ -9,12 +9,12 @@ window.onload=function() {
 	
 	songs=[]
 	raw=document.getElementsByClassName("song") //loads all songs into array
-	for (i of raw) songs.push(i.innerHTML)
+	for (i of raw) songs.push(i.innerText)
 
 	played=false //loads first song on first load
 	current=Math.floor(Math.random()*songs.length) //selects a random song to start with
 
-	document.getElementById("name").innerHTML=songs[current]
+	document.getElementById("name").innerText=songs[current]
 
 	document.onkeydown=(e)=>{
 		key=e.which||e.event
@@ -73,23 +73,23 @@ function load_index(n) {
 }
 function load_name(s) { //loads a song and resets title, bar etc
 	for (i in raw) {
-		if (raw[i].innerHTML==s) {
+		if (raw[i].innerText==s) {
 			raw[i].scrollIntoView()
 			break
 		}
 	}
 	music.onloadedmetadata=()=>{ //must wait for audio to load before getting timestamps
 		time.max=music.duration
-		document.title=document.getElementById("name").innerHTML=s
+		document.title=document.getElementById("name").innerText=s
 		play()
 	}
 	music.src="/music/"+s
 }
 function song(e) { //handles when song container is clicked
 	if (e.target.tagName.toLowerCase()=="p") { //dont load song if div is clicked
-		load_name(e.target.innerHTML)
+		load_name(e.target.innerText)
 		for (i in songs) {
-			if (songs[i]==e.target.innerHTML) {
+			if (songs[i]==e.target.innerText) {
 				current=i
 				break
 			}
