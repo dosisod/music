@@ -1,4 +1,4 @@
-window.onload=function() {
+window.onload=()=> {
 	time=document.getElementById("time")
 	music=document.getElementById("music")
 	cycle=document.getElementById("cycle")
@@ -20,7 +20,7 @@ window.onload=function() {
 		key=e.which||e.event
 
 		//same key layout at desktop youtube
-		if (key==75) toggle()
+		if (key==75||key==32) toggle()
 		else if (key==74) next(-1)
 		else if (key==76) next(1)
 		else if (key==77) mode()
@@ -45,10 +45,7 @@ function pause() {
 }
 function toggle() { //switches which icon is to be displayed for play/pause
 	if (played)
-		if (music.paused)
-			play()
-		else
-			pause()
+		music.paused?play():pause()
 	else
 		load_index(current)
 }
@@ -59,7 +56,6 @@ function next(n) { //shifts current index by N, can be any integer
 			current=(current+Math.floor(Math.random()*songs.length))%songs.length
 	}
 	else if (state==0) { //normal mode
-		if (n<0) n=songs.length+n
 		current=(current+n)%songs.length
 	}
 	load_index(current) //state 1 will just run the same song again
@@ -72,9 +68,9 @@ function load_index(n) {
 	load_name(songs[n])
 }
 function load_name(s) { //loads a song and resets title, bar etc
-	for (i in raw) {
-		if (raw[i].innerText==s) {
-			raw[i].scrollIntoView()
+	for (i of raw) {
+		if (i.innerText==s) {
+			i.scrollIntoView()
 			break
 		}
 	}
@@ -88,12 +84,7 @@ function load_name(s) { //loads a song and resets title, bar etc
 function song(e) { //handles when song container is clicked
 	if (e.target.tagName.toLowerCase()=="p") { //dont load song if div is clicked
 		load_name(e.target.innerText)
-		for (i in songs) {
-			if (songs[i]==e.target.innerText) {
-				current=i
-				break
-			}
-		}
+		current=songs.indexOf(e.targetinnerText)
 	}
 }
 function volume(delta) { //changes volume by n
