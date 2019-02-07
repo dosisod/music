@@ -29,7 +29,7 @@ html, body {
 	padding: 2px 0px 2px 0px;
 	border-bottom: 1px solid #6D2FA7;
 }
-img.control {
+div.buttonbar img {
 	width: 16px;
 	height: 16px;
 }
