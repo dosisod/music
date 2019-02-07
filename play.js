@@ -24,6 +24,9 @@ window.onload=()=> {
 		else if (key==74) next(-1)
 		else if (key==76) next(1)
 		else if (key==77) mode()
+		
+		else if (key==37) seek(-5)
+		else if (key==39) seek(5)
 
 		//for volume
 		else if (key==188) volume(-0.1)
@@ -91,4 +94,7 @@ function volume(delta) { //changes volume by n
 	//prevents warning
 	if (music.volume+delta<=1&&music.volume+delta>=0)
 		music.volume+=delta
+}
+function seek(delta) { //seeks "delta" seconds from current point
+	music.currentTime+=delta
 }
