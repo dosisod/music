@@ -2,8 +2,9 @@ window.onload=()=> {
 	time=document.getElementById("time")
 	music=document.getElementById("music")
 	cycle=document.getElementById("cycle")
-	state=2
+	state=2 //current state
 	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
+	playing=false //stores whether music is playing or not
 
 	setInterval(bar, 60/1000) //updates progress bar
 	
@@ -38,11 +39,12 @@ function bar() { //updates time that the bar displays
 	if (music.currentTime==music.duration) next(1) //plays next song after its done
 }
 function play() {
-	played=true //says that music has been played
+	playing=played=true //says that music has been played
 	music.play()
 	document.getElementById("toggle").src="img/pause.png"
 }
 function pause() {
+	playing=false
 	music.pause()
 	document.getElementById("toggle").src="img/play.png"
 }
@@ -78,9 +80,10 @@ function load_name(s) { //loads a song and resets title, bar etc
 		}
 	}
 	music.onloadedmetadata=()=>{ //must wait for audio to load before getting timestamps
+		console.log(playing, music.paused)
 		time.max=music.duration
 		document.title=document.getElementById("name").innerText=s
-		play()
+		if (playing||!played) play() //dont play song if music is paused
 	}
 	music.src="/music/"+s
 }
