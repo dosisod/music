@@ -12,8 +12,9 @@
 	<div id="songs" onclick="song(event)">
 
 <?php
-foreach (glob("./music/*.mp3", GLOB_MARK) as $item) // */ this comment closes the false comment
+foreach (glob("./music/*.mp3", GLOB_MARK) as $item) { // */ this comment closes the false comment
 	echo "<p class='song'>".basename($item)."</p>";
+}
 ?>
 	</div>
 	<progress value="0" max="1" id="time"></progress>

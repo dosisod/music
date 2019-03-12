@@ -1,4 +1,4 @@
-window.onload=()=> {
+window.onload=()=>{
 	time=document.getElementById("time")
 	music=document.getElementById("music")
 	cycle=document.getElementById("cycle")
@@ -17,7 +17,7 @@ window.onload=()=> {
 
 	document.getElementById("name").innerText=songs[current]
 
-	document.onkeydown=(e)=>{
+	document.onkeydown=e=>{
 		key=e.which||e.event
 
 		//same key layout as desktop youtube
@@ -49,16 +49,15 @@ function pause() {
 	document.getElementById("toggle").src="img/play.png"
 }
 function toggle() { //switches which icon is to be displayed for play/pause
-	if (played)
-		music.paused?play():pause()
-	else
-		load_index(current) //if no songs have been played yet, play current song
+	if (played) music.paused?play():pause()
+	else load_index(current) //if no songs have been played yet, play current song
 }
 function next(n) { //shifts current index by N, can be any integer
 	if (state==2) { //if shuffle is on
 		tmp=current
-		while (tmp==current) //dont want to play the same song
+		while (tmp==current) { //dont want to play the same song
 			current=(current+Math.floor(Math.random()*songs.length))%songs.length
+		}
 	}
 	else if (state==0) { //normal mode
 		current=(current+n)%songs.length
@@ -95,8 +94,9 @@ function song(e) { //handles when song container is clicked
 }
 function volume(delta) { //changes volume by n
 	//prevents warning
-	if (music.volume+delta<=1&&music.volume+delta>=0)
+	if (music.volume+delta<=1&&music.volume+delta>=0) {
 		music.volume+=delta
+	}
 }
 function seek(delta) { //seeks "delta" seconds from current point
 	music.currentTime+=delta
