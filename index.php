@@ -16,6 +16,7 @@ foreach (glob("./music/*.mp3", GLOB_MARK) as $item) { // */ this comment closes 
 	echo "<p class='song'>".basename($item)."</p>";
 }
 ?>
+	<div class="spacer"></div>
 	</div>
 	<progress value="0" max="1" id="time"></progress>
 	<audio id="music" src=""></audio>
