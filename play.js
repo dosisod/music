@@ -79,7 +79,6 @@ function load_name(s) { //loads a song and resets title, bar etc
 		}
 	}
 	music.onloadedmetadata=()=>{ //must wait for audio to load before getting timestamps
-		console.log(playing, music.paused)
 		time.max=music.duration
 		document.title=document.getElementById("name").innerText=s
 		if (playing||!played) play() //dont play song if music is paused
