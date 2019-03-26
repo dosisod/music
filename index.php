@@ -8,7 +8,10 @@
 <body>
 
 <div class="container">
-	<p class="name" id="name"></p>
+	<span class="name">
+		<span class="name" id="name"></span>
+		<span class="name" id="queue"></span>
+	</span>
 	<div id="songs" onclick="song(event)">
 
 <?php

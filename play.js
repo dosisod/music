@@ -2,9 +2,12 @@ window.onload=()=>{
 	time=document.getElementById("time")
 	music=document.getElementById("music")
 	cycle=document.getElementById("cycle")
+	
 	state=2 //current state
 	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
 	playing=false //stores whether music is playing or not
+	control=false
+	queue=[]
 
 	setInterval(bar, 60/1000) //updates progress bar
 	
@@ -18,6 +21,7 @@ window.onload=()=>{
 	document.getElementById("name").innerText=songs[current]
 
 	document.onkeydown=e=>{
+		console.log("down")
 		key=e.which||e.event
 
 		//same key layout as desktop youtube
@@ -32,7 +36,16 @@ window.onload=()=>{
 		//for volume
 		else if (key==188) volume(-0.1) //<
 		else if (key==190) volume(0.1) //>
+
+		else if (key==17) control=true //set control key
 	}
+	document.onkeyup=e=>{
+		console.log("up")
+		key=e.which||e.event
+		if (key==17) control=false //unset control key
+	}
+	//document.body.focus()
+	document.body.click()
 }
 function bar() { //updates time that the bar displays
 	time.value=music.currentTime
@@ -53,7 +66,19 @@ function toggle() { //switches which icon is to be displayed for play/pause
 	else load_index(current) //if no songs have been played yet, play current song
 }
 function next(n) { //shifts current index by N, can be any integer
-	if (state==2) { //if shuffle is on
+	if (queue.length) { //if a song is queued play it
+		load_name(queue[0])
+		queue.shift()
+
+		if (!queue[0]) {
+			document.getElementById("queue").innerText=""
+		}
+		else {
+			document.getElementById("queue").innerHTML="&nbsp;&nbsp; Next: "+queue.join(", ")
+		}
+		return
+	}
+	else if (state==2) { //if shuffle is on
 		tmp=current
 		while (tmp==current) { //dont want to play the same song
 			current=(current+Math.floor(Math.random()*songs.length))%songs.length
@@ -81,14 +106,21 @@ function load_name(s) { //loads a song and resets title, bar etc
 	music.onloadedmetadata=()=>{ //must wait for audio to load before getting timestamps
 		time.max=music.duration
 		document.title=document.getElementById("name").innerText=s
+		
 		if (playing||!played) play() //dont play song if music is paused
 	}
 	music.src="/music/"+s
 }
 function song(e) { //handles when song container is clicked
 	if (e.target.tagName.toLowerCase()=="p") { //dont load song if div is clicked
-		load_name(e.target.innerText)
-		current=songs.indexOf(e.targetinnerText) //update current value
+		if (control) {
+			queue.push(e.target.innerText)
+			document.getElementById("queue").innerHTML="&nbsp;&nbsp; Next: "+queue.join(", ")
+		}
+		else {
+			load_name(e.target.innerText)
+			current=songs.indexOf(e.targetinnerText) //update current value
+		}
 	}
 }
 function volume(delta) { //changes volume by n

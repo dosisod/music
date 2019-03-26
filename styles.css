@@ -10,6 +10,8 @@ html, body {
 	margin: 0;
 	font-size: 18px;
 	width: 100%;
+	overflow: hidden;
+	white-space: nowrap
 }
 .container {
 	height: 100%;
