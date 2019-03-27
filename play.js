@@ -21,7 +21,6 @@ window.onload=()=>{
 	document.getElementById("name").innerText=songs[current]
 
 	document.onkeydown=e=>{
-		console.log("down")
 		key=e.which||e.event
 
 		//same key layout as desktop youtube
@@ -40,42 +39,41 @@ window.onload=()=>{
 		else if (key==17) control=true //set control key
 	}
 	document.onkeyup=e=>{
-		console.log("up")
 		key=e.which||e.event
 		if (key==17) control=false //unset control key
 	}
-	//document.body.focus()
-	document.body.click()
 }
+
 function bar() { //updates time that the bar displays
 	time.value=music.currentTime
 	if (music.currentTime==music.duration) next(1) //plays next song after its done
 }
+
 function play() {
 	playing=played=true //says that music has been played
 	music.play()
 	document.getElementById("toggle").src="img/pause.png"
 }
+
 function pause() {
 	playing=false
 	music.pause()
 	document.getElementById("toggle").src="img/play.png"
 }
+
 function toggle() { //switches which icon is to be displayed for play/pause
 	if (played) music.paused?play():pause()
 	else load_index(current) //if no songs have been played yet, play current song
 }
+
 function next(n) { //shifts current index by N, can be any integer
 	if (queue.length) { //if a song is queued play it
 		load_name(queue[0])
-		queue.shift()
+		queue.shift() //remove most recent song
 
-		if (!queue[0]) {
-			document.getElementById("queue").innerText=""
-		}
-		else {
-			document.getElementById("queue").innerHTML="&nbsp;&nbsp; Next: "+queue.join(", ")
-		}
+		//if there are still songs, display them, else nothing
+		document.getElementById("queue").innerHTML=(queue[0]?"&nbsp;&nbsp; Next: "+queue.join(", "):"")
+		
 		return
 	}
 	else if (state==2) { //if shuffle is on
@@ -89,13 +87,16 @@ function next(n) { //shifts current index by N, can be any integer
 	}
 	load_index(current) //state 1 will just run the same song again
 }
+
 function mode() { //changes between play modes
 	state=(state+1)%states.length
 	cycle.src=states[state]
 }
+
 function load_index(n) { //load song by index (of array)
 	load_name(songs[n])
 }
+
 function load_name(s) { //loads a song and resets title, bar etc
 	for (i of raw) {
 		if (i.innerText==s) {
@@ -111,6 +112,7 @@ function load_name(s) { //loads a song and resets title, bar etc
 	}
 	music.src="/music/"+s
 }
+
 function song(e) { //handles when song container is clicked
 	if (e.target.tagName.toLowerCase()=="p") { //dont load song if div is clicked
 		if (control) {
@@ -123,12 +125,14 @@ function song(e) { //handles when song container is clicked
 		}
 	}
 }
+
 function volume(delta) { //changes volume by n
 	//prevents warning
 	if (music.volume+delta<=1&&music.volume+delta>=0) {
 		music.volume+=delta
 	}
 }
+
 function seek(delta) { //seeks "delta" seconds from current point
 	music.currentTime+=delta
 }
