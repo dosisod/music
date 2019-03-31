@@ -139,9 +139,9 @@ function seek(delta) { //seeks "delta" seconds from current point
 	music.currentTime+=delta
 }
 
-function playlist(arr) {
+function playlist(arr, n) {
 	document.getElementById("songs").innerHTML=""
-	state=0 //switch to normal mode
+	state=n //switch playlist mode
 	songs=arr //reload songs
 
 	songs.forEach(e=>{ //re-add to 
