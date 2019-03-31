@@ -15,6 +15,8 @@ window.onload=()=>{
 	raw=document.getElementsByClassName("song") //loads all songs into array
 	for (i of raw) songs.push(i.innerText)
 
+	old=songs //used when switching back to original playlist
+
 	played=false //loads first song on first load
 	current=Math.floor(Math.random()*songs.length) //selects a random song to start with
 
@@ -135,4 +137,21 @@ function volume(delta) { //changes volume by n
 
 function seek(delta) { //seeks "delta" seconds from current point
 	music.currentTime+=delta
+}
+
+function playlist(arr) {
+	document.getElementById("songs").innerHTML=""
+	state=0 //switch to normal mode
+	songs=arr //reload songs
+
+	songs.forEach(e=>{ //re-add to 
+		nu("p", {
+			"className": "song",
+			"innerText": e
+		}, "songs")
+	})
+	
+	nu("div", {"className": "spacer"}, "songs")
+	
+	load_index(0)
 }
