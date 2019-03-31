@@ -23,26 +23,30 @@ window.onload=()=>{
 	document.getElementById("name").innerText=songs[current]
 
 	document.onkeydown=e=>{
-		key=e.which||e.event
+		key=e.key
 
 		//same key layout as desktop youtube
-		if (key==75||key==32) toggle() //k
-		else if (key==74) next(-1) //j
-		else if (key==76) next(1) //l
-		else if (key==77) mode() //m
+		if (key=="k"||key==" ") toggle() //k
+		else if (key=="j") next(-1) //j
+		else if (key=="l") next(1) //l
+		else if (key=="m") mode() //m
 		
-		else if (key==37) seek(-5) //left arrow
-		else if (key==39) seek(5) //right arrow
+		else if (key=="ArrowLeft") seek(-5) //left arrow
+		else if (key=="ArrowRight") seek(5) //right arrow
 
 		//for volume
-		else if (key==188) volume(-0.1) //<
-		else if (key==190) volume(0.1) //>
+		else if (key==",") volume(-0.1) //< key
+		else if (key==".") volume(0.1) //> key
 
-		else if (key==17) control=true //set control key
+		else if (key=="Control") control=true //set control key
+
+		else if (lists[Number(key)-1]) { //if 1-9 key is pressed for playlist
+			playlist(lists[Number(key)-1], 0) //play it
+		}
+		else if (key=="r") playlist(old, 2) //if "r" is pressed, play old songs
 	}
 	document.onkeyup=e=>{
-		key=e.which||e.event
-		if (key==17) control=false //unset control key
+		if (e.key=="Control") control=false //unset control key
 	}
 }
 
@@ -142,16 +146,17 @@ function seek(delta) { //seeks "delta" seconds from current point
 function playlist(arr, n) {
 	document.getElementById("songs").innerHTML=""
 	state=n //switch playlist mode
-	songs=arr //reload songs
+	songs=arr //load new playlist
 
-	songs.forEach(e=>{ //re-add to 
+	songs.forEach(e=>{ //adds songs from playlist onto screen
 		nu("p", {
 			"className": "song",
 			"innerText": e
 		}, "songs")
 	})
 	
-	nu("div", {"className": "spacer"}, "songs")
+	nu("div", {"className": "spacer"}, "songs") //re-adds spacer at the bottom
 	
-	load_index(0)
+	load_index(0) //auto-plays first song
+	if (n==2) next(1) //if shuffle is on, get random song
 }
