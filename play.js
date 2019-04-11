@@ -48,6 +48,7 @@ window.onload=()=>{
 	document.onkeyup=e=>{
 		if (e.key=="Control") control=false //unset control key
 	}
+	music.onerror=e=>next(1) //prevents 404 from killing the music
 }
 
 function bar() { //updates time that the bar displays
