@@ -2,6 +2,8 @@ window.onload=()=>{
 	time=document.getElementById("time")
 	music=document.getElementById("music")
 	cycle=document.getElementById("cycle")
+
+	rgb=true //change this to disable the color cycle
 	
 	state=2 //current state
 	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
@@ -49,6 +51,15 @@ window.onload=()=>{
 		if (e.key=="Control") control=false //unset control key
 	}
 	music.onerror=e=>next(1) //prevents 404 from killing the music
+
+	timer=Date.now()
+
+	if (rgb) {
+		setInterval(()=>{
+			document.getElementById("songs").style.backgroundColor="hsl("+(timer/50)%360+",50%,50%)"
+			timer=Date.now()
+		}, 50)
+	}
 }
 
 function bar() { //updates time that the bar displays
