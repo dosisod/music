@@ -4,6 +4,7 @@ window.onload=()=>{
 	cycle=document.getElementById("cycle")
 
 	rgb=true //change this to disable the color cycle
+	autoplay=true //change this to disable auto play
 	
 	state=2 //current state
 	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
@@ -59,6 +60,11 @@ window.onload=()=>{
 			document.getElementById("songs").style.backgroundColor="hsl("+(timer/50)%360+",50%,50%)"
 			timer=Date.now()
 		}, 50)
+	}
+
+	if (autoplay) {
+		//if allowed by the browser, auto play next song
+		next(1)
 	}
 }
 
