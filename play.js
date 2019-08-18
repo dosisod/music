@@ -41,7 +41,7 @@ window.onload=()=>{
 		else if (key==",") volume(-0.1) //< key
 		else if (key==".") volume(0.1) //> key
 
-		else if (key=="Control") control=true //set control key
+		else if (key=="Control"||e.ctrlKey) control=true //set control key
 
 		else if (lists[Number(key)-1]) { //if 1-9 key is pressed for playlist
 			playlist(lists[Number(key)-1], 0) //play it
@@ -49,7 +49,9 @@ window.onload=()=>{
 		else if (key=="r") playlist(old, 2) //if "r" is pressed, play old songs
 	}
 	document.onkeyup=e=>{
-		if (e.key=="Control") control=false //unset control key
+		if (e.key=="Control"||e.ctrlKey) {
+			control=false //unset control key if control is released
+		}
 	}
 
 	this.errorcount=0 //dont loop forever if internet cuts out
@@ -147,7 +149,6 @@ function load_name(s) { //loads a song and resets title, bar etc
 function song(e) { //handles when song container is clicked
 	if (e.target.tagName.toLowerCase()=="p") { //dont load song if div is clicked
 		if (control) {
-			control=false
 			queue.push(e.target.innerText)
 			document.getElementById("queue").innerHTML="&nbsp;&nbsp; Next: "+queue.join(", ")
 		}
