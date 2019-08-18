@@ -51,7 +51,14 @@ window.onload=()=>{
 	document.onkeyup=e=>{
 		if (e.key=="Control") control=false //unset control key
 	}
-	music.onerror=e=>next(1) //prevents 404 from killing the music
+
+	this.errorcount=0 //dont loop forever if internet cuts out
+	music.onerror=e=>{
+		if (this.errorcount<10) {
+			next(1) //prevents 404 from killing the music
+			this.errorcount++
+		}
+	}
 
 	timer=Date.now()
 
