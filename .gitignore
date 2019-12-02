@@ -1,0 +1,6 @@
+*.swp
+.vim
+
+*.bak
+music/
+todo
