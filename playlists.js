@@ -1,5 +1,5 @@
 //2d array containing song playlists
-lists=[]
+const lists=[]
 
 if (lists.length>0) { //only do this if at least one playlist is here
 	lists.forEach((e, i)=>{

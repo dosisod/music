@@ -1,10 +1,10 @@
-window.onload=()=>{
-	time=document.getElementById("time")
-	music=document.getElementById("music")
-	cycle=document.getElementById("cycle")
+window.onload=()=> {
+	time=nu("time")
+	music=nu("music")
+	cycle=nu("cycle")
 
-	rgb=true //change this to disable the color cycle
-	autoplay=true //change this to disable auto play
+	var rgb=true //change this to disable the color cycle
+	var autoplay=true //change this to disable auto play
 	
 	state=2 //current state
 	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
@@ -16,17 +16,20 @@ window.onload=()=>{
 	
 	songs=[]
 	raw=document.getElementsByClassName("song") //loads all songs into array
-	for (i of raw) songs.push(i.innerText)
+
+	for (const i of raw) {
+		songs.push(i.innerText)
+	}
 
 	old=songs //used when switching back to original playlist
 
 	played=false //loads first song on first load
 	current=Math.floor(Math.random()*songs.length) //selects a random song to start with
 
-	document.getElementById("name").innerText=songs[current]
+	nu("name").innerText=songs[current]
 
 	document.onkeydown=e=>{
-		key=e.key
+		const key=e.key
 
 		//same key layout as desktop youtube
 		if (key=="k"||key==" ") toggle() //k
@@ -48,25 +51,26 @@ window.onload=()=>{
 		}
 		else if (key=="r") playlist(old, 2) //if "r" is pressed, play old songs
 	}
+
 	document.onkeyup=e=>{
 		if (e.key=="Control"||e.ctrlKey) {
 			control=false //unset control key if control is released
 		}
 	}
 
-	this.errorcount=0 //dont loop forever if internet cuts out
+	errorcount=0 //dont loop forever if internet cuts out
 	music.onerror=e=>{
-		if (this.errorcount<10) {
+		if (errorcount<10) {
 			next(1) //prevents 404 from killing the music
-			this.errorcount++
+			errorcount++
 		}
 	}
 
-	timer=Date.now()
+	var timer=Date.now()
 
 	if (rgb) {
-		setInterval(()=>{
-			document.getElementById("songs").style.backgroundColor="hsl("+(timer/50)%360+",50%,50%)"
+		setInterval(function() {
+			nu("songs").style.backgroundColor="hsl("+(timer/50)%360+",50%,50%)"
 			timer=Date.now()
 		}, 50)
 	}
@@ -79,24 +83,30 @@ window.onload=()=>{
 
 function bar() { //updates time that the bar displays
 	time.value=music.currentTime
-	if (music.currentTime==music.duration) next(1) //plays next song after its done
+	if (music.currentTime==music.duration) {
+		next(1) //plays next song after its done
+	}
 }
 
 function play() {
 	playing=played=true //says that music has been played
 	music.play()
-	document.getElementById("toggle").src="img/pause.png"
+	nu("toggle").src="img/pause.png"
 }
 
 function pause() {
 	playing=false
 	music.pause()
-	document.getElementById("toggle").src="img/play.png"
+	nu("toggle").src="img/play.png"
 }
 
 function toggle() { //switches which icon is to be displayed for play/pause
-	if (played) music.paused?play():pause()
-	else load_index(current) //if no songs have been played yet, play current song
+	if (played) {
+		music.paused?play():pause()
+	}
+	else {
+		load_index(current) //if no songs have been played yet, play current song
+	}
 }
 
 function next(n) { //shifts current index by N, can be any integer
@@ -105,12 +115,13 @@ function next(n) { //shifts current index by N, can be any integer
 		queue.shift() //remove most recent song
 
 		//if there are still songs, display them, else nothing
-		document.getElementById("queue").innerHTML=(queue[0]?"&nbsp;&nbsp; Next: "+queue.join(", "):"")
+		nu("queue").innerHTML=(queue[0]?"&nbsp;&nbsp; Next: "+queue.join(", "):"")
 		
 		return
 	}
 	else if (state==2) { //if shuffle is on
-		tmp=current
+		const tmp=current
+
 		while (tmp==current) { //dont want to play the same song
 			current=(current+Math.floor(Math.random()*songs.length))%songs.length
 		}
@@ -131,7 +142,7 @@ function load_index(n) { //load song by index (of array)
 }
 
 function load_name(s) { //loads a song and resets title, bar etc
-	for (i of raw) {
+	for (var i of raw) {
 		if (i.innerText==s) {
 			i.scrollIntoView()
 			break
@@ -139,7 +150,7 @@ function load_name(s) { //loads a song and resets title, bar etc
 	}
 	music.onloadedmetadata=()=>{ //must wait for audio to load before getting timestamps
 		time.max=music.duration
-		document.title=document.getElementById("name").innerText=s
+		document.title=nu("name").innerText=s
 		
 		if (playing||!played) play() //dont play song if music is paused
 	}
@@ -171,7 +182,7 @@ function seek(delta) { //seeks "delta" seconds from current point
 }
 
 function playlist(arr, n) {
-	document.getElementById("songs").innerHTML=""
+	nu("songs").innerHTML=""
 	state=n //switch playlist mode
 	songs=arr //load new playlist
 
