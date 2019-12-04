@@ -24,6 +24,9 @@ html, body {
 	flex: 1;
 	overflow: auto;
 }
+span.wrapper {
+	cursor: pointer;
+}
 .song {
 	width: 100%;
 	color: white;

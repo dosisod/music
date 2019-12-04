@@ -17,7 +17,7 @@
 
 <?php
 foreach (glob("./music/*.mp3", GLOB_MARK) as $item) { // */ this comment closes the false comment
-	echo "<p class='song'>".basename($item)."</p>";
+	echo "<p class='song'><span class='wrapper'>".basename($item)."</span></p>";
 }
 ?>
 	<div class="spacer"></div>
