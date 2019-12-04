@@ -16,7 +16,7 @@
 	<div id="songs" onclick="song(event)">
 
 <?php
-foreach (glob("./music/*.mp3", GLOB_MARK) as $item) { // */ this comment closes the false comment
+foreach (glob("./music/*.mp3", GLOB_MARK) as $item) { 
 	echo "<p class='song'><span class='wrapper'>".basename($item)."</span></p>";
 }
 ?>

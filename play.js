@@ -158,7 +158,7 @@ function load_name(s) { //loads a song and resets title, bar etc
 }
 
 function song(e) { //handles when song container is clicked
-	if (e.target.tagName.toLowerCase()=="p") { //dont load song if div is clicked
+	if (e.target.tagName!=="DIV") { //dont load song if div is clicked
 		if (control) {
 			queue.push(e.target.innerText)
 			document.getElementById("queue").innerHTML="&nbsp;&nbsp; Next: "+queue.join(", ")
