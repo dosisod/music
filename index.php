@@ -13,7 +13,7 @@
 		<span class="name" id="name"></span>
 		<span class="name" id="queue"></span>
 	</span>
-	<div id="songs" onclick="song(event)">
+	<div id="songs" onclick="handle(event)">
 
 <?php
 foreach (glob("./music/*.mp3", GLOB_MARK) as $item) { 

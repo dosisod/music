@@ -1,17 +1,17 @@
 //2d array containing song playlists
-const lists=[]
+const playlists=[]
 
-if (lists.length>0) { //only do this if at least one playlist is here
-	lists.forEach((e, i)=>{
+if (playlists.length>0) {
+	playlists.forEach((e, i)=>{
 		nu("span", {
-			"onclick": ()=>playlist(lists[i], 0),
+			"onclick": ()=>playlist(playlists[i], 0),
 			"innerText": i+1,
 			"className": "playlist"
 		}, "bar")
 	})
 	
 	nu("span", {
-		"onclick": ()=>playlist(old, 2), //switch to old song list
+		"onclick": ()=>playlist(allSongs, 2),
 		"innerText": "R",
 		"className": "playlist"
 	}, "bar")

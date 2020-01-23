@@ -1,200 +1,231 @@
-window.onload=()=> {
+window.addEventListener("load", function() {
 	time=nu("time")
 	music=nu("music")
 	cycle=nu("cycle")
 
-	var rgb=true //change this to disable the color cycle
-	var autoplay=true //change this to disable auto play
+	var showRGB=true
+	var doAutoplay=true
 	
-	state=2 //current state
-	states=["img/normal.png", "img/loop.png", "img/shuffle.png"]
-	playing=false //stores whether music is playing or not
-	control=false
+	currentState=2
+	states=["normal.png", "loop.png", "shuffle.png"]
+	isPlaying=false
+	controlPressed=false
 	queue=[]
 
-	setInterval(bar, 60/1000) //updates progress bar
+	setInterval(updateBar, 60/1000)
 	
-	songs=[]
-	raw=document.getElementsByClassName("song") //loads all songs into array
+	songElements=document.getElementsByClassName("song")
 
-	for (const i of raw) {
-		songs.push(i.innerText)
+	songs=[]
+	for (const song of songElements) {
+		songs.push(song.innerText)
 	}
 
-	old=songs //used when switching back to original playlist
+	//when a playlist is selected, allow for switching back later
+	allSongs=songs
 
-	played=false //loads first song on first load
-	current=Math.floor(Math.random()*songs.length) //selects a random song to start with
+	startedPlaying=false
+	currentIndex=getRandomIndex()
 
-	nu("name").innerText=songs[current]
+	nu("name").innerText=songs[currentIndex]
 
-	document.onkeydown=e=>{
+	document.onkeydown=(e)=> {
 		const key=e.key
+		const num=Number(key)-1
 
 		//same key layout as desktop youtube
-		if (key=="k"||key==" ") toggle() //k
-		else if (key=="j") next(-1) //j
-		else if (key=="l") next(1) //l
-		else if (key=="m") mode() //m
+		if (key=="k" || key==" ") toggle()
+		else if (key=="j") shiftBy(-1)
+		else if (key=="l") shiftBy(1)
+		else if (key=="m") nextMode()
 		
-		else if (key=="ArrowLeft") seek(-5) //left arrow
-		else if (key=="ArrowRight") seek(5) //right arrow
+		else if (key=="ArrowLeft") seek(-5)
+		else if (key=="ArrowRight") seek(5)
 
-		//for volume
-		else if (key==",") volume(-0.1) //< key
-		else if (key==".") volume(0.1) //> key
+		//volume control ( < and > keys)
+		else if (key==",") volume(-0.1)
+		else if (key==".") volume(0.1)
 
-		else if (key=="Control"||e.ctrlKey) control=true //set control key
+		else if (key=="Control" || e.ctrlKey) controlPressed=true
 
-		else if (lists[Number(key)-1]) { //if 1-9 key is pressed for playlist
-			playlist(lists[Number(key)-1], 0) //play it
+		//number keys 1-9 load playlists
+		else if (playlists[num]) {
+			playlist(playlists[num], 0)
 		}
-		else if (key=="r") playlist(old, 2) //if "r" is pressed, play old songs
+		else if (key=="r") playlist(old, 2)
 	}
 
-	document.onkeyup=e=>{
-		if (e.key=="Control"||e.ctrlKey) {
-			control=false //unset control key if control is released
+	document.onkeyup=(e)=> {
+		if (e.key=="Control" || e.ctrlKey) {
+			controlPressed=false
 		}
 	}
 
-	errorcount=0 //dont loop forever if internet cuts out
-	music.onerror=e=>{
-		if (errorcount<10) {
-			next(1) //prevents 404 from killing the music
+	errorcount=0
+
+	//prevents 404 from killing the music
+	music.onerror=(e)=> {
+		if (errorcount < 10) {
+			shiftBy(1)
 			errorcount++
 		}
 	}
 
 	var timer=Date.now()
 
-	if (rgb) {
+	if (showRGB) {
 		setInterval(function() {
 			nu("songs").style.backgroundColor="hsl("+(timer/50)%360+",50%,50%)"
 			timer=Date.now()
 		}, 50)
 	}
 
-	if (autoplay) {
-		//if allowed by the browser, auto play next song
-		next(1)
+	if (doAutoplay) {
+		shiftBy(1)
 	}
-}
+})
 
-function bar() { //updates time that the bar displays
+function updateBar() {
 	time.value=music.currentTime
+
 	if (music.currentTime==music.duration) {
-		next(1) //plays next song after its done
+		shiftBy(1)
 	}
 }
 
 function play() {
-	playing=played=true //says that music has been played
+	isPlaying=true
+	startedPlaying=true
 	music.play()
+
 	nu("toggle").src="img/pause.png"
 }
 
 function pause() {
-	playing=false
+	isPlaying=false
 	music.pause()
+
 	nu("toggle").src="img/play.png"
 }
 
-function toggle() { //switches which icon is to be displayed for play/pause
-	if (played) {
-		music.paused?play():pause()
+function toggle() {
+	if (startedPlaying) {
+		music.paused ? play() : pause()
 	}
 	else {
-		load_index(current) //if no songs have been played yet, play current song
+		loadIndex(currentIndex)
 	}
 }
 
-function next(n) { //shifts current index by N, can be any integer
-	if (queue.length) { //if a song is queued play it
-		load_name(queue[0])
-		queue.shift() //remove most recent song
+function shiftBy(amount) {
+	if (queue.length > 0) {
+		loadName(queue[0])
 
-		//if there are still songs, display them, else nothing
-		nu("queue").innerHTML=(queue[0]?"&nbsp;&nbsp; Next: "+queue.join(", "):"")
+		if (queue[1]) {
+			displayQueue()
+		}
 		
+		queue.shift()
 		return
 	}
-	else if (state==2) { //if shuffle is on
-		const tmp=current
 
-		while (tmp==current) { //dont want to play the same song
-			current=(current+Math.floor(Math.random()*songs.length))%songs.length
+	//shuffle
+	else if (currentState==2) {
+		const lastIndex=currentIndex
+
+		while (lastIndex==currentIndex) {
+			currentIndex=(
+				currentIndex +
+				getRandomIndex()
+			) % songs.length
 		}
 	}
-	else if (state==0) { //normal mode
-		current=(current+n)%songs.length
+
+	//normal
+	else if (currentState==0) {
+		currentIndex=(currentIndex + amount) % songs.length
 	}
-	load_index(current) //state 1 will just run the same song again
+
+	loadIndex(currentIndex)
 }
 
-function mode() { //changes between play modes
-	state=(state+1)%states.length
-	cycle.src=states[state]
+function nextMode() {
+	currentState=(currentState + 1) % states.length
+	cycle.src="img/"+states[currentState]
 }
 
-function load_index(n) { //load song by index (of array)
-	load_name(songs[n])
+function loadIndex(index) {
+	loadName(songs[index])
 }
 
-function load_name(s) { //loads a song and resets title, bar etc
-	for (var i of raw) {
-		if (i.innerText==s) {
-			i.scrollIntoView()
+//loads a song and resets title, bar etc
+function loadName(songName) {
+	for (var song of songElements) {
+		if (song.innerText==songName) {
+			song.scrollIntoView()
 			break
 		}
 	}
-	music.onloadedmetadata=()=>{ //must wait for audio to load before getting timestamps
+
+	music.onloadedmetadata=()=>{
 		time.max=music.duration
-		document.title=nu("name").innerText=s
-		
-		if (playing||!played) play() //dont play song if music is paused
+		document.title=nu("name").innerText=songName
+
+		if (isPlaying || !startedPlaying) {
+			play()
+		}
 	}
-	music.src="/music/"+s
+	music.src="/music/"+songName
 }
 
-function song(e) { //handles when song container is clicked
-	if (e.target.tagName!=="DIV") { //dont load song if div is clicked
-		if (control) {
+function handle(e) {
+	if (e.target.tagName!=="DIV") {
+		if (controlPressed) {
 			queue.push(e.target.innerText)
-			document.getElementById("queue").innerHTML="&nbsp;&nbsp; Next: "+queue.join(", ")
+			displayQueue()
 		}
 		else {
-			load_name(e.target.innerText)
-			current=songs.indexOf(e.targetinnerText) //update current value
+			loadName(e.target.innerText)
+			currentIndex=songs.indexOf(e.targetinnerText)
 		}
 	}
 }
 
-function volume(delta) { //changes volume by n
-	//prevents warning
-	if (music.volume+delta<=1&&music.volume+delta>=0) {
+function volume(delta) {
+	if (music.volume+delta >= 0 && music.volume+delta <= 1) {
 		music.volume+=delta
 	}
 }
 
-function seek(delta) { //seeks "delta" seconds from current point
+function seek(delta) {
 	music.currentTime+=delta
 }
 
-function playlist(arr, n) {
+function playlist(arr, state) {
 	nu("songs").innerHTML=""
-	state=n //switch playlist mode
-	songs=arr //load new playlist
+	currentState=state
+	songs=arr
 
-	songs.forEach(e=>{ //adds songs from playlist onto screen
+	songs.forEach(e=> {
 		nu("p", {
 			"className": "song",
 			"innerText": e
 		}, "songs")
 	})
 	
-	nu("div", {"className": "spacer"}, "songs") //re-adds spacer at the bottom
+	nu("div", {"className": "spacer"}, "songs")
 	
-	load_index(0) //auto-plays first song
-	if (n==2) next(1) //if shuffle is on, get random song
+	loadIndex(0)
+
+	if (state==2) {
+		shiftBy(1)
+	}
+}
+
+function getRandomIndex() {
+	return Math.floor(Math.random() * songs.length)
+}
+
+function displayQueue() {
+	nu("queue").innerHTML="&nbsp;&nbsp; Next: "+queue.join(", ")
 }
