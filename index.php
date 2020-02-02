@@ -25,10 +25,10 @@ foreach (glob("./music/*.mp3", GLOB_MARK) as $item) {
 	<progress value="0" max="1" id="time"></progress>
 	<audio id="music"></audio>
 	<div class="buttonbar" id="bar">
-		<img src="img/last.png" onclick="next(-1)">
+		<img src="img/last.png" onclick="shiftBy(-1)">
 		<img src="img/play.png" onclick="toggle()" id="toggle">
-		<img src="img/next.png" onclick="next(1)">
-		<img src="img/shuffle.png" onclick="mode()" id="cycle">
+		<img src="img/next.png" onclick="shiftBy(1)">
+		<img src="img/shuffle.png" onclick="nextMode()" id="cycle">
 	</div>
 </div>
 <script src="playlists.js"></script>

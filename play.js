@@ -34,7 +34,10 @@ window.addEventListener("load", function() {
 		const num=Number(key)-1
 
 		//same key layout as desktop youtube
-		if (key=="k" || key==" ") toggle()
+		if (key=="k" || key==" ") {
+			e.preventDefault()
+			toggle()
+		}
 		else if (key=="j") shiftBy(-1)
 		else if (key=="l") shiftBy(1)
 		else if (key=="m") nextMode()
@@ -52,7 +55,10 @@ window.addEventListener("load", function() {
 		else if (playlists[num]) {
 			playlist(playlists[num], 0)
 		}
-		else if (key=="r") playlist(old, 2)
+
+		else if (key=="r") {
+			playlist(old, 2)
+		}
 	}
 
 	document.onkeyup=(e)=> {
