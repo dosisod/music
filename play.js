@@ -126,12 +126,15 @@ function toggle() {
 function shiftBy(amount) {
 	if (queue.length > 0) {
 		loadName(queue[0])
+		queue.shift()
 
-		if (queue[1]) {
+		if (queue[0]) {
 			displayQueue()
 		}
-		
-		queue.shift()
+		else {
+			nu("queue").innerHTML=""
+		}
+
 		return
 	}
 
@@ -192,7 +195,7 @@ function handle(e) {
 		}
 		else {
 			loadName(e.target.innerText)
-			currentIndex=songs.indexOf(e.targetinnerText)
+			currentIndex=songs.indexOf(e.target.innerText)
 		}
 	}
 }
