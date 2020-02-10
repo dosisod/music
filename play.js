@@ -5,15 +5,18 @@ window.addEventListener("load", function() {
 
 	var showRGB=true
 	var doAutoplay=true
-	
+
 	currentState=2
 	states=["normal.png", "loop.png", "shuffle.png"]
 	isPlaying=false
+
 	controlPressed=false
+	const controlPressTimeout=10000
+
 	queue=[]
 
 	setInterval(updateBar, 60/1000)
-	
+
 	songElements=document.getElementsByClassName("song")
 
 	songs=[]
@@ -41,7 +44,7 @@ window.addEventListener("load", function() {
 		else if (key=="j") shiftBy(-1)
 		else if (key=="l") shiftBy(1)
 		else if (key=="m") nextMode()
-		
+
 		else if (key=="ArrowLeft") seek(-5)
 		else if (key=="ArrowRight") seek(5)
 
@@ -49,7 +52,14 @@ window.addEventListener("load", function() {
 		else if (key==",") volume(-0.1)
 		else if (key==".") volume(0.1)
 
-		else if (key=="Control" || e.ctrlKey) controlPressed=true
+		else if (key=="Control" || e.ctrlKey) {
+			controlPressed=true
+
+			//unset potentially stuck control key
+			setTimeout(function() {
+				controlPressed=false
+			}, controlPressTimeout)
+		}
 
 		//number keys 1-9 load playlists
 		else if (playlists[num]) {
@@ -221,9 +231,9 @@ function playlist(arr, state) {
 			"innerText": e
 		}, "songs")
 	})
-	
+
 	nu("div", {"className": "spacer"}, "songs")
-	
+
 	loadIndex(0)
 
 	if (state==2) {
