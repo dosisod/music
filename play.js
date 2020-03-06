@@ -34,7 +34,7 @@ window.addEventListener("load", function() {
 
 	document.onkeydown=(e)=> {
 		const key=e.key
-		const num=Number(key)-1
+		const num=Number(key) - 1
 
 		//same key layout as desktop youtube
 		if (key=="k" || key==" ") {
@@ -91,7 +91,7 @@ window.addEventListener("load", function() {
 
 	if (showRGB) {
 		setInterval(function() {
-			nu("songs").style.backgroundColor="hsl("+(timer/50)%360+",50%,50%)"
+			nu("songs").style.backgroundColor="hsl(" + (timer/50)%360 + ",50%,50%)"
 			timer=Date.now()
 		}, 50)
 	}
@@ -170,7 +170,7 @@ function shiftBy(amount) {
 
 function nextMode() {
 	currentState=(currentState + 1) % states.length
-	cycle.src="img/"+states[currentState]
+	cycle.src="img/" + states[currentState]
 }
 
 function loadIndex(index) {
