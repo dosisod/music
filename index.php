@@ -17,7 +17,7 @@
 
 <?php
 foreach (glob("./music/*.mp3", GLOB_MARK) as $item) {
-	echo "<p class='song'><span class='wrapper'>".basename($item)."</span></p>";
+	echo "<p class='song'><span class='wrapper'>".substr(basename($item), 0, -4)."</span></p>";
 }
 ?>
 	<div class="spacer"></div>

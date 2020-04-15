@@ -194,7 +194,7 @@ function loadName(songName) {
 			play()
 		}
 	}
-	music.src="/music/"+songName
+	music.src="/music/" + songName + ".mp3"
 }
 
 function handle(e) {
