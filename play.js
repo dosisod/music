@@ -77,10 +77,9 @@ window.addEventListener("load", function() {
 		}
 	}
 
-	errorcount=0
-
-	//prevents 404 from killing the music
+	var errorcount=0
 	music.onerror=(e)=> {
+		//if there was an error loading song, retry at most 10 times
 		if (errorcount < 10) {
 			shiftBy(1)
 			errorcount++
@@ -91,7 +90,7 @@ window.addEventListener("load", function() {
 
 	if (showRGB) {
 		setInterval(function() {
-			nu("songs").style.backgroundColor="hsl(" + (timer/50)%360 + ",50%,50%)"
+			nu("songs").style.backgroundColor=`hsl( ${(timer / 50)%360}, 50%, 50%)`
 			timer=Date.now()
 		}, 50)
 	}
@@ -104,9 +103,7 @@ window.addEventListener("load", function() {
 function updateBar() {
 	time.value=music.currentTime
 
-	if (music.currentTime==music.duration) {
-		shiftBy(1)
-	}
+	if (music.currentTime==music.duration) shiftBy(1)
 }
 
 function play() {
@@ -138,39 +135,33 @@ function shiftBy(amount) {
 		loadName(queue[0])
 		queue.shift()
 
-		if (queue[0]) {
-			displayQueue()
-		}
-		else {
-			nu("queue").innerHTML=""
-		}
-
-		return
+		queue[0] ? displayQueue() : nu("queue").innerHTML=""
 	}
 
-	//shuffle
+	//shuffle mode
 	else if (currentState==2) {
 		const lastIndex=currentIndex
 
 		while (lastIndex==currentIndex) {
-			currentIndex=(
-				currentIndex +
-				getRandomIndex()
-			) % songs.length
+			currentIndex+=getRandomIndex()
+			currentIndex%=songs.length
 		}
 	}
 
-	//normal
+	//normal mode
 	else if (currentState==0) {
-		currentIndex=(currentIndex + amount) % songs.length
+		currentIndex+=amount
+		currentIndex%=songs.length
 	}
 
 	loadIndex(currentIndex)
 }
 
 function nextMode() {
-	currentState=(currentState + 1) % states.length
-	cycle.src="img/" + states[currentState]
+	currentState++
+	currentState%=states.length
+
+	cycle.src=`img/${states[currentState]}`
 }
 
 function loadIndex(index) {
@@ -179,7 +170,7 @@ function loadIndex(index) {
 
 //loads a song and resets title, bar etc
 function loadName(songName) {
-	for (var song of songElements) {
+	for (const song of songElements) {
 		if (song.innerText==songName) {
 			song.scrollIntoView()
 			break
@@ -190,23 +181,21 @@ function loadName(songName) {
 		time.max=music.duration
 		document.title=nu("name").innerText=songName
 
-		if (isPlaying || !startedPlaying) {
-			play()
-		}
+		if (isPlaying || !startedPlaying) play()
 	}
-	music.src="/music/" + songName + ".mp3"
+	music.src=`/music/${songName}.mp3`
 }
 
 function handle(e) {
-	if (e.target.tagName!=="DIV") {
-		if (controlPressed) {
-			queue.push(e.target.innerText)
-			displayQueue()
-		}
-		else {
-			loadName(e.target.innerText)
-			currentIndex=songs.indexOf(e.target.innerText)
-		}
+	if (e.target.tagName==="DIV") return
+
+	if (controlPressed) {
+		queue.push(e.target.innerText)
+		displayQueue()
+	}
+	else {
+		loadName(e.target.innerText)
+		currentIndex=songs.indexOf(e.target.innerText)
 	}
 }
 
@@ -246,5 +235,5 @@ function getRandomIndex() {
 }
 
 function displayQueue() {
-	nu("queue").innerHTML="&nbsp;&nbsp; Next: "+queue.join(", ")
+	nu("queue").innerHTML=`&nbsp;&nbsp; Next: ${queue.join(", ")}`
 }
