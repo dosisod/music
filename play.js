@@ -136,6 +136,7 @@ function shiftBy(amount) {
 		queue.shift()
 
 		queue[0] ? displayQueue() : nu("queue").innerHTML=""
+		return
 	}
 
 	//shuffle mode
